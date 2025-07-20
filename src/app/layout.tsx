@@ -11,6 +11,8 @@ const poppins = Poppins({
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
   subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${playfairDisplay.variable} antialiased`}
+        className={`${poppins.variable} ${playfairDisplay.variable} dark antialiased`}
       >
         {children}
       </body>
