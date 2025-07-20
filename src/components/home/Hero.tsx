@@ -1,11 +1,13 @@
 import React from 'react'
 import {Button} from "@/components/ui/button";
 import { TextGenerateEffect } from '../ui/text-generate-effect';
+import { Spotlight } from '../ui/spotlight';
 
 function Hero() {
   return (
     <>
     <div className='w-screen min-h-screen bg-background'>
+      <Spotlight className='fixed left-1/5 top-[-26%] hidden md:block light:hidden'/>
         {/* Hero content goes here */}
         <div className='container relative min-h-[36rem] flex flex-col'>
           {/* hero content */}
