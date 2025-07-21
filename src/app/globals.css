@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 .container {
-  @apply max-w-5xl px-4 md:mx-auto;
+  @apply max-w-5xl px-2 sm:px-4 md:mx-auto;
 }
 
 @keyframes spotlight {

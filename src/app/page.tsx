@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="">
       <Hero/>
-      {/* <TachStack/> */}
+      <TachStack/>
       {/* <Footer/> */}
     </div>
   );
