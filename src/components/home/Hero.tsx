@@ -2,12 +2,14 @@ import React from 'react'
 import {Button} from "@/components/ui/button";
 import { TextGenerateEffect } from '../ui/text-generate-effect';
 import { Spotlight } from '../ui/spotlight';
+import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
+import Image from 'next/image';
 
 function Hero() {
   return (
     <>
-    <div className='w-screen min-h-screen bg-background'>
-      <Spotlight className='fixed left-1/5 top-[-26%] hidden md:block light:hidden'/>
+    <div className='w-full min-h-screen bg-background '>
+      <Spotlight className='absolute left-1/5 top-[-26%] hidden md:block light:hidden'/>
         {/* Hero content goes here */}
         <div className='container relative min-h-[36rem] flex flex-col'>
           {/* hero content */}
@@ -37,8 +39,13 @@ function Hero() {
 
         </div>
         
-        <div className='w-full border-t-[1px] border-neutral-800 pt-4'>
-
+        <div className='w-full relative border-t-[1px] border-neutral-800 pt-4 '>
+          <InfiniteMovingCards className='w-full'>
+            <Image src="/images/project1.png" alt='project' width={700} height={400} className="rounded-lg" />
+            <Image src="/images/project2.png" alt='project' width={700} height={400} className="rounded-lg" />
+            <Image src="/images/project3.png" alt='project' width={700} height={400} className="rounded-lg" />
+            <Image src="/images/project4.png" alt='project' width={700} height={400} className="rounded-lg" />
+          </InfiniteMovingCards>
         </div>
     </div>
     </>
