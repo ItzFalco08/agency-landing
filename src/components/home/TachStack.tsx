@@ -8,9 +8,9 @@ function TachStack() {
      
 
         <div id='title' className='w-full py-8 flex justify-center'>
-          <h2 className="font-semibold text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white">
+          <h3 className="font-semibold text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white">
             Boost SEO & Performance <br /> at <Cover>light speed</Cover>
-          </h2>
+          </h3>
         </div>
      
       </div>

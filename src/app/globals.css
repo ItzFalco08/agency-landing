@@ -160,7 +160,7 @@
   }
   
   h3 {
-    font-size: clamp(1.25rem, 5vw, 2.25rem);
+    font-size: clamp(1.7rem, 5vw, 3rem);
     font-weight: 500;
     line-height: 1.3;
     letter-spacing: -0.01em;
