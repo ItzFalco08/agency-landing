@@ -21,7 +21,7 @@ function Hero() {
         {/* Hero content goes here */}
         <div className='container relative min-h-[36rem] flex flex-col'>
           {/* hero content */}
-          <div className='w-full flex-1 border-l-[1px] border-r-[1px] border-neutral-800 flex items-center justify-center'>
+          <div className='w-full flex-1 border-l-[1px] border-r-[1px] border-border flex items-center justify-center'>
             <div className='space-y-6 flex flex-col items-center gap-4'>
               <div className='text-center text-[clamp(2rem,6vw,3rem)] max-w-xl font-medium leading-tight tracking-tight'>
                 <TextGenerateEffect 
@@ -57,7 +57,7 @@ function Hero() {
           </div>
         </div>
         
-        <div className='w-full relative border-t-[1px] border-b-[1px] border-neutral-800 py-4 '>
+        <div className='w-full relative border-t-[1px] border-b-[1px] border-border py-4 '>
           <InfiniteMovingCards className='w-full'>
             <Image 
               loading='lazy'
