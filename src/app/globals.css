@@ -176,7 +176,7 @@
   }
 
   p {
-    @apply text-sm leading-relaxed tracking-wide;
+    @apply text-base leading-relaxed tracking-wide;
   }
   
   /* Large text variant */

@@ -3,13 +3,18 @@ import Footer from "@/components/home/Footer";
 import Hero from "@/components/home/Hero";
 import Bento from "@/components/home/Bento";
 import { SmoothScroll } from "@/utility/SmoothScroll";
+import Faq from "@/components/home/Faq";
 
 export default function Home() {
   return (
     <div className="">
       <SmoothScroll/>
       <Hero/>
-      <Bento/>
+
+      <div className='relative container '>
+        <Bento/>
+        <Faq/>
+      </div>
       {/* <Footer/> */}
 
       <BottomShadow/>
