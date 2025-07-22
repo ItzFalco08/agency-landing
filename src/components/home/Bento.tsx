@@ -1,5 +1,6 @@
 import React from 'react'
 import { Cover } from '../ui/cover'
+import Bento from '../ui/Bento';
 
 function TachStack() {
   return (
@@ -14,21 +15,7 @@ function TachStack() {
         </div>
 
         {/* bento */}
-        <div className='w-full max-w-2xl mx-auto flex gap-4'>
-          <div className='relative w-full h-fit flex flex-col gap-4'>
-            <div className='h-[96px] p-[24px] rounded-[28px] bg-neutral-900 flex gap-[16px]'></div>
-            <div className='h-[96px] p-[24px] rounded-[28px] bg-neutral-900 flex gap-[16px]'></div>
-
-            <div className='h-[296px] p-[24px] rounded-[28px] bg-neutral-900'></div>
-          </div>
-
-          <div className='relative w-full h-fit flex flex-col gap-4'>
-            <div className='h-[296px] p-[24px] rounded-[28px] bg-neutral-900'></div>
-
-            <div className=' h-[96px] p-[24px] rounded-[28px] bg-neutral-900 flex gap-[16px]'></div>
-            <div className=' h-[96px] p-[24px] rounded-[28px] bg-neutral-900 flex gap-[16px]'></div>
-          </div>
-        </div>
+       <Bento />
 
       </div>
     </div>
