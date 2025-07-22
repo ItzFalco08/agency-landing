@@ -4,7 +4,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Cover } from "../ui/cover";
 
 function Faq() {
   return (
