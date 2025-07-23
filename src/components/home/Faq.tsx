@@ -7,7 +7,7 @@ import {
 
 function Faq() {
   return (
-    <div className="w-full px-6 md:px-0 min-h-screen relative border-l-[1px] border-r-[1px] border-border py-24">
+    <div className="w-full px-6 md:px-0 min-h-screen relative border-l-[1px] border-r-[1px] border-border py-12">
         <div id='title' className='w-full py-8 flex justify-center'>
             <h2 className="font-semibold text-center mb-6 relative z-20 py-6 bg-clip-text text-transparent bg-black dark:bg-gradient-to-b dark:from-neutral-800 dark:via-white dark:to-white">
             Have Questions? <br /> We got Answers

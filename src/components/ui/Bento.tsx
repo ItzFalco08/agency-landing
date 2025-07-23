@@ -25,7 +25,7 @@ function BentoItem({children, className}: {children?: React.ReactNode, className
 
 function Bento() {
   return (
-    <div className='w-full max-w-3xl mx-auto flex flex-col md:flex-row gap-4 mt-6 px-4 md:px-0'>
+    <div className='w-full max-w-3xl mx-auto flex flex-col md:flex-row gap-4 mt-6  px-4 md:px-0'>
       <div className='relative w-full h-fit flex flex-col gap-4'>
         <BentoItem>
           <div className="bg-[#8d42df70] w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
