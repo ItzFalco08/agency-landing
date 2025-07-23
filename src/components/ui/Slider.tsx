@@ -69,9 +69,9 @@ export function Slider({ quotes }: { quotes: QuoteData[]; }) {
   }, [emblaApi]);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-10 px-4 md:px-0 max-w-3xl mx-auto">
+    <div className="flex w-full flex-col items-center justify-center gap-10 px-4 lg:px-0 max-w-4xl mx-auto">
 
-      <div className="w-full flex justify-end md:mb-4 items-center">
+      <div className="w-full flex justify-end lg:mb-4 items-center">
 
         {/* Buttons */}
         <div className="flex items-center justify-center gap-4 ">
@@ -131,25 +131,25 @@ export function Slider({ quotes }: { quotes: QuoteData[]; }) {
 
 export function VainillaCard({ quote, author }: QuoteData) {
   return (
-    <div className="min-w-0 max-w-full shrink-0 grow-0 basis-[min(740px,100%)] self-stretch md:pr-10">
+    <div className="min-w-0 max-w-full shrink-0 grow-0 basis-[min(740px,100%)] self-stretch lg:pr-10">
       <article className="embla__slide flex h-full w-full min-w-0 transform touch-pan-y touch-pinch-zoom select-none flex-col rounded-xl border border-border [backface-visibility:hidden]">
-        <div className="flex flex-1 items-start border-b border-border px-5 py-[18px] md:px-8 md:py-7">
+        <div className="flex flex-1 items-start border-b border-border px-5 py-[18px] lg:px-8 lg:py-7">
           <blockquote className="text-pretty text-xl font-extralight leading-[135%] text-neutral-900 dark:text-neutral-100 sm:text-2xl md:text-3xl">
             &ldquo;{quote}&rdquo;
           </blockquote>
         </div>
         <div className="flex items-center gap-4 pl-5">
           <div className="flex flex-1 items-center gap-5 border-r border-border py-4">
-            <div className="hidden size-16 rounded-full bg-neutral-200 dark:bg-neutral-800 md:block" />
+            <div className="hidden size-16 rounded-full bg-neutral-200 dark:bg-neutral-800 lg:block" />
             <div className="flex flex-1 flex-col">
-              <h5 className="text-base font-medium md:text-lg">{author._title}</h5>
-              <p className="text-pretty text-sm text-neutral-600 dark:text-neutral-400 md:text-base">
+              <h5 className="text-base font-medium lg:text-lg">{author._title}</h5>
+              <p className="text-pretty text-sm text-neutral-600 dark:text-neutral-400 lg:text-base">
                 {author.role}, {author.company._title}
               </p>
             </div>
           </div>
           <div className="pr-5">
-            <div className="w-12 h-12 bg-neutral-200 dark:bg-neutral-800 rounded md:w-16 md:h-16" />
+            <div className="w-12 h-12 bg-neutral-200 dark:bg-neutral-800 rounded lg:w-16 lg:h-16" />
           </div>
         </div>
       </article>

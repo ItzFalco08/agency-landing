@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 .container {
-  @apply max-w-5xl px-2 sm:px-4 md:mx-auto;
+  @apply max-w-6xl px-2 sm:px-4 md:mx-auto;
 }
 
 @keyframes spotlight {
@@ -23,11 +23,21 @@
   }
 }
 
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(var(--radius, 200px)) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(var(--radius, 200px)) rotate(-360deg);
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
   --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+  --animate-orbit: orbit var(--duration, 10s) linear infinite;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-poppins: var(--font-poppins);

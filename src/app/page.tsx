@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/utility/SmoothScroll";
 import Faq from "@/components/home/Faq";
 import Projects from "@/components/home/Projects";
 import { Testimonials } from "@/components/home/Testimonials";
+import TechStack from "@/components/home/TechStack";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <div className='relative container '>
         <Bento/>
         {/* <Projects/> */}
+        <TechStack/>
         <Testimonials/>
         <Faq/>
       </div>
