@@ -1,0 +1,6 @@
+1. Footer
+2. Team
+3. Why choose us
+4. 3 step process
+5. Cta
+6. glow background in hero (if needed remove border)

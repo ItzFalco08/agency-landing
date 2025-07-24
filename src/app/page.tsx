@@ -20,8 +20,13 @@ export default function Home() {
         <TechStack/>
         <Testimonials/>
         <Faq/>
+
+        
       </div>
-      {/* <Footer/> */}
+
+      <div className="relative container z-[102]">
+        <Footer/>
+      </div>
 
       <BottomShadow/>
     </div>
