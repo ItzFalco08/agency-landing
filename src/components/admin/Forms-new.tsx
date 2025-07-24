@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,9 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Project, Testimonial, TeamMember, apiClient } from '@/lib/api'
-import { Upload, X, Loader2 } from 'lucide-react'
-import Image from 'next/image'
+import { Project, Testimonial, TeamMember } from '@/lib/api'
 
 interface ProjectFormProps {
   project?: Project
@@ -31,45 +29,14 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
     image: project?.image || '',
     link: project?.link || ''
   })
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const [uploadingImage, setUploadingImage] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
-    let imageUrl = formData.image
-    
-    // Upload image if a file is selected
-    if (imageFile) {
-      try {
-        console.log('Starting image upload...', imageFile.name)
-        setUploadingImage(true)
-        const response = await apiClient.uploadProjectImage(imageFile)
-        console.log('Upload response:', response)
-        
-        if (response.success && response.data?.image?.url) {
-          imageUrl = response.data.image.url
-          console.log('Final image URL:', imageUrl)
-        } else {
-          console.error('Upload response missing image URL:', response)
-          alert('Upload failed - no image URL received')
-          return
-        }
-      } catch (error) {
-        console.error('Error uploading image:', error)
-        alert('Failed to upload image. Please try again.')
-        return
-      } finally {
-        setUploadingImage(false)
-      }
-    }
-    
     onSave({
       title: formData.title,
       description: formData.description,
       tech: formData.tech.split(',').map(t => t.trim()).filter(Boolean),
-      image: imageUrl,
+      image: formData.image,
       link: formData.link
     })
   }
@@ -79,24 +46,6 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
       ...prev,
       [e.target.name]: e.target.value
     }))
-  }
-
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setImageFile(file)
-      // Create preview URL for display only
-      const previewUrl = URL.createObjectURL(file)
-      setFormData(prev => ({ ...prev, image: previewUrl }))
-    }
-  }
-
-  const removeImage = () => {
-    setImageFile(null)
-    setFormData(prev => ({ ...prev, image: '' }))
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
   }
 
   return (
@@ -149,61 +98,15 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="image">Project Image</Label>
-              <div className="space-y-3">
-                {formData.image && (
-                  <div className="relative w-full h-48 border rounded-lg overflow-hidden">
-                    <Image
-                      src={formData.image}
-                      alt="Project preview"
-                      fill
-                      className="object-cover"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-2 right-2"
-                      onClick={removeImage}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-                
-                <div className="flex gap-2">
-                  <Input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageFileChange}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex-1"
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Image
-                  </Button>
-                </div>
-                
-                <div className="text-sm text-gray-500">
-                  Or enter image URL:
-                </div>
-                <Input
-                  id="image"
-                  name="image"
-                  type="url"
-                  value={imageFile ? '' : formData.image}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.jpg"
-                  disabled={!!imageFile}
-                />
-              </div>
+              <Label htmlFor="image">Image URL</Label>
+              <Input
+                id="image"
+                name="image"
+                type="url"
+                value={formData.image}
+                onChange={handleChange}
+                placeholder="https://example.com/image.jpg"
+              />
             </div>
             
             <div className="space-y-2">
@@ -224,15 +127,8 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
             <Button type="button" variant="outline" onClick={onCancel}>
               Cancel
             </Button>
-            <Button type="submit" disabled={uploadingImage}>
-              {uploadingImage ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                project ? 'Update Project' : 'Add Project'
-              )}
+            <Button type="submit">
+              {project ? 'Update Project' : 'Add Project'}
             </Button>
           </DialogFooter>
         </form>
@@ -356,52 +252,12 @@ export function TeamMemberForm({ teamMember, onSave, onCancel }: TeamMemberFormP
     email: teamMember?.email || '',
     location: teamMember?.location || '',
     joinedYear: teamMember?.joinedYear || new Date().getFullYear().toString(),
-    bio: teamMember?.bio || '',
-    avatar: teamMember?.avatar || ''
+    bio: teamMember?.bio || ''
   })
-  const [avatarFile, setAvatarFile] = useState<File | null>(null)
-  const [uploadingAvatar, setUploadingAvatar] = useState(false)
-  const avatarInputRef = useRef<HTMLInputElement>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
-    let avatarUrl = formData.avatar
-    
-    // Upload avatar if a file is selected
-    if (avatarFile) {
-      try {
-        console.log('Starting avatar upload...', avatarFile.name)
-        setUploadingAvatar(true)
-        const response = await apiClient.uploadTeamAvatar(avatarFile)
-        console.log('Avatar upload response:', response)
-        
-        if (response.success && response.data?.avatar?.url) {
-          avatarUrl = response.data.avatar.url
-          console.log('Final avatar URL:', avatarUrl)
-        } else {
-          console.error('Upload response missing avatar URL:', response)
-          alert('Upload failed - no avatar URL received')
-          return
-        }
-      } catch (error) {
-        console.error('Error uploading avatar:', error)
-        alert('Failed to upload avatar. Please try again.')
-        return
-      } finally {
-        setUploadingAvatar(false)
-      }
-    }
-    
-    onSave({
-      name: formData.name,
-      role: formData.role,
-      email: formData.email,
-      location: formData.location,
-      joinedYear: formData.joinedYear,
-      bio: formData.bio,
-      avatar: avatarUrl
-    })
+    onSave(formData)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -409,24 +265,6 @@ export function TeamMemberForm({ teamMember, onSave, onCancel }: TeamMemberFormP
       ...prev,
       [e.target.name]: e.target.value
     }))
-  }
-
-  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setAvatarFile(file)
-      // Create preview URL
-      const previewUrl = URL.createObjectURL(file)
-      setFormData(prev => ({ ...prev, avatar: previewUrl }))
-    }
-  }
-
-  const removeAvatar = () => {
-    setAvatarFile(null)
-    setFormData(prev => ({ ...prev, avatar: '' }))
-    if (avatarInputRef.current) {
-      avatarInputRef.current.value = ''
-    }
   }
 
   return (
@@ -451,64 +289,6 @@ export function TeamMemberForm({ teamMember, onSave, onCancel }: TeamMemberFormP
                 placeholder="Enter full name"
                 required
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="avatar">Profile Avatar</Label>
-              <div className="space-y-3">
-                {formData.avatar && (
-                  <div className="relative w-32 h-32 mx-auto border rounded-full overflow-hidden">
-                    <Image
-                      src={formData.avatar}
-                      alt="Avatar preview"
-                      fill
-                      className="object-cover"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-1 right-1"
-                      onClick={removeAvatar}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
-                
-                <div className="flex gap-2">
-                  <Input
-                    ref={avatarInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarFileChange}
-                    className="hidden"
-                    id="avatar-upload"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => avatarInputRef.current?.click()}
-                    className="flex-1"
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Avatar
-                  </Button>
-                </div>
-                
-                <div className="text-sm text-gray-500">
-                  Or enter avatar URL:
-                </div>
-                <Input
-                  id="avatar"
-                  name="avatar"
-                  type="url"
-                  value={avatarFile ? '' : formData.avatar}
-                  onChange={handleChange}
-                  placeholder="https://example.com/avatar.jpg"
-                  disabled={!!avatarFile}
-                />
-              </div>
             </div>
             
             <div className="space-y-2">
@@ -582,15 +362,8 @@ export function TeamMemberForm({ teamMember, onSave, onCancel }: TeamMemberFormP
             <Button type="button" variant="outline" onClick={onCancel}>
               Cancel
             </Button>
-            <Button type="submit" disabled={uploadingAvatar}>
-              {uploadingAvatar ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                teamMember ? 'Update Member' : 'Add Member'
-              )}
+            <Button type="submit">
+              {teamMember ? 'Update Member' : 'Add Member'}
             </Button>
           </DialogFooter>
         </form>

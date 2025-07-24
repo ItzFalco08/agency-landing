@@ -48,103 +48,47 @@ import {
   Bell,
   User,
   Calendar,
-  Activity
+  Activity,
+  Loader2
 } from 'lucide-react'
 import Link from 'next/link'
-
-// Types
-interface Project {
-  id: number
-  title: string
-  description: string
-  tech: string[]
-  image: string
-  link: string
-}
-
-interface Testimonial {
-  id: number
-  quote: string
-  author: string
-  role: string
-  company: string
-}
-
-interface TeamMember {
-  id: number
-  name: string
-  role: string
-  email: string
-  location: string
-  joinedYear: string
-  bio: string
-}
-
-// Mock data
-const mockProjects: Project[] = [
-  {
-    id: 1,
-    title: 'E-commerce Platform',
-    description: 'A modern e-commerce solution with React and Node.js',
-    tech: ['React', 'Node.js', 'MongoDB'],
-    image: '/project1.jpg',
-    link: 'https://example.com'
-  },
-  {
-    id: 2,
-    title: 'Mobile Banking App',
-    description: 'Secure mobile banking application with biometric authentication',
-    tech: ['React Native', 'Firebase', 'Node.js'],
-    image: '/project2.jpg',
-    link: 'https://example.com'
-  }
-]
-
-const mockTestimonials: Testimonial[] = [
-  {
-    id: 1,
-    quote: 'Amazing work! They delivered exactly what we needed.',
-    author: 'John Doe',
-    role: 'CEO',
-    company: 'Tech Corp'
-  },
-  {
-    id: 2,
-    quote: 'Professional team with excellent communication skills.',
-    author: 'Jane Smith',
-    role: 'CTO',
-    company: 'Innovation Labs'
-  }
-]
-
-const mockTeamMembers: TeamMember[] = [
-  {
-    id: 1,
-    name: 'Anubhav Singh',
-    role: 'Founder & CEO',
-    email: 'anubhav@weanovas.co.in',
-    location: 'India',
-    joinedYear: '2022',
-    bio: 'Visionary leader with a passion for innovation'
-  },
-  {
-    id: 2,
-    name: 'Hetvi Patel',
-    role: 'Social Media Manager',
-    email: 'hetvi@weanovas.co.in',
-    location: 'India',
-    joinedYear: '2023',
-    bio: 'Creative strategist who crafts compelling brand stories'
-  }
-]
+import { useProjects, useTestimonials, useTeamMembers } from '@/hooks/useApiData'
+import { useAuth } from '@/hooks/useAuth'
+import { Project, Testimonial, TeamMember } from '@/lib/api'
 
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
+  const { logout } = useAuth()
+  
+  // API hooks
+  const {
+    projects,
+    loading: projectsLoading,
+    createProject,
+    updateProject,
+    deleteProject,
+  } = useProjects()
+
+  const {
+    testimonials,
+    loading: testimonialsLoading,
+    createTestimonial,
+    updateTestimonial,
+    deleteTestimonial,
+  } = useTestimonials()
+
+  const {
+    teamMembers,
+    loading: teamLoading,
+    createTeamMember,
+    updateTeamMember,
+    deleteTeamMember,
+  } = useTeamMembers()
 
   const stats = {
-    projects: mockProjects.length,
-    testimonials: mockTestimonials.length,
-    teamMembers: mockTeamMembers.length
+    projects: projects.length,
+    testimonials: testimonials.length,
+    teamMembers: teamMembers.length
   }
 
   // Sidebar navigation items
@@ -256,7 +200,7 @@ export function AdminDashboard() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton>
+                <SidebarMenuButton onClick={logout}>
                   <LogOut />
                   <span>Logout</span>
                 </SidebarMenuButton>
@@ -307,15 +251,33 @@ export function AdminDashboard() {
               )}
 
               {activeTab === 'projects' && (
-                <ProjectsManager projects={mockProjects} />
+                <ProjectsManager 
+                  projects={projects} 
+                  loading={projectsLoading}
+                  onCreateProject={createProject}
+                  onUpdateProject={updateProject}
+                  onDeleteProject={deleteProject}
+                />
               )}
 
               {activeTab === 'testimonials' && (
-                <TestimonialsManager testimonials={mockTestimonials} />
+                <TestimonialsManager 
+                  testimonials={testimonials}
+                  loading={testimonialsLoading}
+                  onCreateTestimonial={createTestimonial}
+                  onUpdateTestimonial={updateTestimonial}
+                  onDeleteTestimonial={deleteTestimonial}
+                />
               )}
 
               {activeTab === 'team' && (
-                <TeamManager teamMembers={mockTeamMembers} />
+                <TeamManager 
+                  teamMembers={teamMembers}
+                  loading={teamLoading}
+                  onCreateTeamMember={createTeamMember}
+                  onUpdateTeamMember={updateTeamMember}
+                  onDeleteTeamMember={deleteTeamMember}
+                />
               )}
             </div>
           </main>
@@ -453,7 +415,19 @@ function DashboardOverview({ stats }: { stats: { projects: number, testimonials:
 }
 
 // Projects Manager Component
-function ProjectsManager({ projects }: { projects: Project[] }) {
+function ProjectsManager({ 
+  projects, 
+  loading,
+  onCreateProject,
+  onUpdateProject,
+  onDeleteProject 
+}: { 
+  projects: Project[]
+  loading: boolean
+  onCreateProject: (projectData: Omit<Project, '_id'>) => Promise<void>
+  onUpdateProject: (id: string, projectData: Partial<Project>) => Promise<void>
+  onDeleteProject: (id: string) => Promise<void>
+}) {
   const [searchTerm, setSearchTerm] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [editingProject, setEditingProject] = useState<Project | undefined>()
@@ -468,16 +442,34 @@ function ProjectsManager({ projects }: { projects: Project[] }) {
     setShowForm(true)
   }
 
-  const handleSaveProject = (projectData: Omit<Project, 'id'>) => {
-    // In a real app, this would make an API call
-    console.log('Saving project:', projectData)
-    setShowForm(false)
-    setEditingProject(undefined)
+  const handleSaveProject = async (projectData: Omit<Project, '_id'>) => {
+    try {
+      if (editingProject?._id) {
+        await onUpdateProject(editingProject._id, projectData)
+      } else {
+        await onCreateProject(projectData)
+      }
+      setShowForm(false)
+      setEditingProject(undefined)
+    } catch (error) {
+      console.error('Error saving project:', error)
+    }
   }
 
-  const handleDeleteProject = (projectId: number) => {
-    // In a real app, this would make an API call
-    console.log('Deleting project:', projectId)
+  const handleDeleteProject = async (projectId: string) => {
+    try {
+      await onDeleteProject(projectId)
+    } catch (error) {
+      console.error('Error deleting project:', error)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    )
   }
 
   return (
@@ -513,7 +505,7 @@ function ProjectsManager({ projects }: { projects: Project[] }) {
       {/* Projects Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
-          <Card key={project.id} className="group hover:shadow-md transition-shadow">
+          <Card key={project._id} className="group hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <CardTitle className="text-lg">{project.title}</CardTitle>
@@ -542,7 +534,7 @@ function ProjectsManager({ projects }: { projects: Project[] }) {
                     <Edit className="w-3 h-3 mr-1" />
                     Edit
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleDeleteProject(project.id)}>
+                  <Button size="sm" variant="outline" onClick={() => handleDeleteProject(project._id!)}>
                     <Trash2 className="w-3 h-3 mr-1" />
                     Delete
                   </Button>
@@ -569,7 +561,19 @@ function ProjectsManager({ projects }: { projects: Project[] }) {
 }
 
 // Testimonials Manager Component
-function TestimonialsManager({ testimonials }: { testimonials: Testimonial[] }) {
+function TestimonialsManager({ 
+  testimonials,
+  loading,
+  onCreateTestimonial,
+  onUpdateTestimonial,
+  onDeleteTestimonial 
+}: { 
+  testimonials: Testimonial[]
+  loading: boolean
+  onCreateTestimonial: (testimonialData: Omit<Testimonial, '_id'>) => Promise<void>
+  onUpdateTestimonial: (id: string, testimonialData: Partial<Testimonial>) => Promise<void>
+  onDeleteTestimonial: (id: string) => Promise<void>
+}) {
   const [showForm, setShowForm] = useState(false)
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | undefined>()
 
@@ -583,16 +587,34 @@ function TestimonialsManager({ testimonials }: { testimonials: Testimonial[] }) 
     setShowForm(true)
   }
 
-  const handleSaveTestimonial = (testimonialData: Omit<Testimonial, 'id'>) => {
-    // In a real app, this would make an API call
-    console.log('Saving testimonial:', testimonialData)
-    setShowForm(false)
-    setEditingTestimonial(undefined)
+  const handleSaveTestimonial = async (testimonialData: Omit<Testimonial, '_id'>) => {
+    try {
+      if (editingTestimonial?._id) {
+        await onUpdateTestimonial(editingTestimonial._id, testimonialData)
+      } else {
+        await onCreateTestimonial(testimonialData)
+      }
+      setShowForm(false)
+      setEditingTestimonial(undefined)
+    } catch (error) {
+      console.error('Error saving testimonial:', error)
+    }
   }
 
-  const handleDeleteTestimonial = (testimonialId: number) => {
-    // In a real app, this would make an API call
-    console.log('Deleting testimonial:', testimonialId)
+  const handleDeleteTestimonial = async (testimonialId: string) => {
+    try {
+      await onDeleteTestimonial(testimonialId)
+    } catch (error) {
+      console.error('Error deleting testimonial:', error)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    )
   }
 
   return (
@@ -610,7 +632,7 @@ function TestimonialsManager({ testimonials }: { testimonials: Testimonial[] }) 
 
       <div className="space-y-4">
         {testimonials.map((testimonial) => (
-          <Card key={testimonial.id}>
+          <Card key={testimonial._id}>
             <CardContent className="pt-6">
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
@@ -633,7 +655,7 @@ function TestimonialsManager({ testimonials }: { testimonials: Testimonial[] }) 
                       <Edit className="w-3 h-3 mr-1" />
                       Edit
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleDeleteTestimonial(testimonial.id)}>
+                    <Button size="sm" variant="outline" onClick={() => handleDeleteTestimonial(testimonial._id!)}>
                       <Trash2 className="w-3 h-3 mr-1" />
                       Delete
                     </Button>
@@ -661,7 +683,19 @@ function TestimonialsManager({ testimonials }: { testimonials: Testimonial[] }) 
 }
 
 // Team Manager Component
-function TeamManager({ teamMembers }: { teamMembers: TeamMember[] }) {
+function TeamManager({ 
+  teamMembers,
+  loading,
+  onCreateTeamMember,
+  onUpdateTeamMember,
+  onDeleteTeamMember 
+}: { 
+  teamMembers: TeamMember[]
+  loading: boolean
+  onCreateTeamMember: (memberData: Omit<TeamMember, '_id'>) => Promise<void>
+  onUpdateTeamMember: (id: string, memberData: Partial<TeamMember>) => Promise<void>
+  onDeleteTeamMember: (id: string) => Promise<void>
+}) {
   const [showForm, setShowForm] = useState(false)
   const [editingMember, setEditingMember] = useState<TeamMember | undefined>()
 
@@ -675,16 +709,34 @@ function TeamManager({ teamMembers }: { teamMembers: TeamMember[] }) {
     setShowForm(true)
   }
 
-  const handleSaveMember = (memberData: Omit<TeamMember, 'id'>) => {
-    // In a real app, this would make an API call
-    console.log('Saving team member:', memberData)
-    setShowForm(false)
-    setEditingMember(undefined)
+  const handleSaveMember = async (memberData: Omit<TeamMember, '_id'>) => {
+    try {
+      if (editingMember?._id) {
+        await onUpdateTeamMember(editingMember._id, memberData)
+      } else {
+        await onCreateTeamMember(memberData)
+      }
+      setShowForm(false)
+      setEditingMember(undefined)
+    } catch (error) {
+      console.error('Error saving team member:', error)
+    }
   }
 
-  const handleDeleteMember = (memberId: number) => {
-    // In a real app, this would make an API call
-    console.log('Deleting team member:', memberId)
+  const handleDeleteMember = async (memberId: string) => {
+    try {
+      await onDeleteTeamMember(memberId)
+    } catch (error) {
+      console.error('Error deleting team member:', error)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    )
   }
 
   return (
@@ -702,7 +754,7 @@ function TeamManager({ teamMembers }: { teamMembers: TeamMember[] }) {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {teamMembers.map((member) => (
-          <Card key={member.id}>
+          <Card key={member._id}>
             <CardContent className="pt-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -724,7 +776,7 @@ function TeamManager({ teamMembers }: { teamMembers: TeamMember[] }) {
                     <Edit className="w-3 h-3 mr-1" />
                     Edit
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleDeleteMember(member.id)}>
+                  <Button size="sm" variant="outline" onClick={() => handleDeleteMember(member._id!)}>
                     <Trash2 className="w-3 h-3 mr-1" />
                     Delete
                   </Button>

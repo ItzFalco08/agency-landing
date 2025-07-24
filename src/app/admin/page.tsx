@@ -1,19 +1,40 @@
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { AuthProvider, useAuth } from '@/hooks/useAuth'
 import { AdminDashboard } from '@/components/admin/AdminDashboard'
+import { Loader2 } from 'lucide-react'
 
-// This would typically check authentication status
-async function checkAuth() {
-  // Mock authentication check
-  // In a real app, this would verify JWT tokens, sessions, etc.
-  return true // Change to true when authenticated
-}
+function ProtectedAdminDashboard() {
+  const { isAuthenticated, isLoading } = useAuth()
+  const router = useRouter()
 
-export default async function AdminPage() {
-  const isAuthenticated = await checkAuth()
-  
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/admin/login')
+    }
+  }, [isAuthenticated, isLoading, router])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-950">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
   if (!isAuthenticated) {
-    redirect('/admin/login')
+    return null // Will redirect to login
   }
 
   return <AdminDashboard />
+}
+
+export default function AdminPage() {
+  return (
+    <AuthProvider>
+      <ProtectedAdminDashboard />
+    </AuthProvider>
+  )
 }
