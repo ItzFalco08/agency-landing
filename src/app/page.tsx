@@ -7,6 +7,7 @@ import Faq from "@/components/home/Faq";
 import Projects from "@/components/home/Projects";
 import { Testimonials } from "@/components/home/Testimonials";
 import TechStack from "@/components/home/TechStack";
+import Team from "@/components/home/Team";
 
 export default function Home() {
   return (
@@ -16,15 +17,14 @@ export default function Home() {
 
       <div className='relative container '>
         <Bento/>
-        {/* <Projects/> */}
+        <Projects/>
         <TechStack/>
         <Testimonials/>
+        <Team/>
         <Faq/>
-
-        
       </div>
 
-      <div className="relative container z-[102]">
+      <div className="relative container z-[101]">
         <Footer/>
       </div>
 

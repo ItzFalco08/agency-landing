@@ -32,7 +32,7 @@ export default function NavbarDemo() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full z-[105]">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
@@ -40,6 +40,12 @@ export default function NavbarDemo() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <ToggleTheme />
+            <a 
+              href="/admin/login" 
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Admin
+            </a>
             <NavbarButton variant="primary">Book a call</NavbarButton>
           </div>
         </NavBody>
