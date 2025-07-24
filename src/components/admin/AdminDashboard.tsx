@@ -183,7 +183,7 @@ export function AdminDashboard() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-muted/40">
+      <div className="min-h-screen flex w-full bg-neutral-950 ">
         {/* Sidebar */}
         <Sidebar variant="inset" className='bg-neutral-900'>
           <SidebarHeader>
@@ -300,7 +300,7 @@ export function AdminDashboard() {
           </header>
 
           {/* Page Content */}
-          <main className="flex-1 p-4 pt-0">
+          <main className="flex-1 p-4 pt-12">
             <div className="mx-auto max-w-6xl">
               {activeTab === 'overview' && (
                 <DashboardOverview stats={stats} />
