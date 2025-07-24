@@ -47,11 +47,11 @@ import {
   Settings,
   Bell,
   User,
-  Calendar,
   Activity,
   Loader2
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useProjects, useTestimonials, useTeamMembers } from '@/hooks/useApiData'
 import { useAuth } from '@/hooks/useAuth'
 import { Project, Testimonial, TeamMember } from '@/lib/api'
@@ -289,6 +289,56 @@ export function AdminDashboard() {
 
 // Dashboard Overview Component
 function DashboardOverview({ stats }: { stats: { projects: number, testimonials: number, teamMembers: number } }) {
+  // Generate recent activity based on current data
+  const getRecentActivity = () => {
+    const activities = []
+    
+    if (stats.projects > 0) {
+      activities.push({
+        type: 'project',
+        title: 'Projects Active',
+        description: `${stats.projects} project${stats.projects !== 1 ? 's' : ''} currently in portfolio`,
+        time: 'Active',
+        color: 'bg-green-500'
+      })
+    }
+    
+    if (stats.testimonials > 0) {
+      activities.push({
+        type: 'testimonial',
+        title: 'Client Reviews',
+        description: `${stats.testimonials} testimonial${stats.testimonials !== 1 ? 's' : ''} from satisfied clients`,
+        time: 'Updated',
+        color: 'bg-blue-500'
+      })
+    }
+    
+    if (stats.teamMembers > 0) {
+      activities.push({
+        type: 'team',
+        title: 'Team Status',
+        description: `${stats.teamMembers} team member${stats.teamMembers !== 1 ? 's' : ''} actively working`,
+        time: 'Online',
+        color: 'bg-purple-500'
+      })
+    }
+    
+    // Add default activity if no data
+    if (activities.length === 0) {
+      activities.push({
+        type: 'default',
+        title: 'Welcome to Admin Dashboard',
+        description: 'Start by adding your first project, testimonial, or team member',
+        time: 'Now',
+        color: 'bg-gray-500'
+      })
+    }
+    
+    return activities
+  }
+
+  const recentActivities = getRecentActivity()
+
   return (
     <div className="space-y-6">
       <div>
@@ -341,75 +391,29 @@ function DashboardOverview({ stats }: { stats: { projects: number, testimonials:
       </div>
 
       {/* Recent Activity */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5" />
-              Recent Activity
-            </CardTitle>
-            <CardDescription>Latest updates across all sections</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/30">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+      <Card className="border-border/50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="h-5 w-5" />
+            Recent Activity
+          </CardTitle>
+          <CardDescription>Latest updates across all sections</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {recentActivities.map((activity, index) => (
+              <div key={index} className="flex items-center gap-4 p-3 rounded-lg bg-muted/30">
+                <div className={`w-2 h-2 ${activity.color} rounded-full`}></div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">New project added</p>
-                  <p className="text-xs text-muted-foreground">E-commerce Platform was created</p>
+                  <p className="text-sm font-medium">{activity.title}</p>
+                  <p className="text-xs text-muted-foreground">{activity.description}</p>
                 </div>
-                <span className="text-xs text-muted-foreground">2h ago</span>
+                <span className="text-xs text-muted-foreground">{activity.time}</span>
               </div>
-              <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/30">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Testimonial updated</p>
-                  <p className="text-xs text-muted-foreground">John Doe&apos;s review was modified</p>
-                </div>
-                <span className="text-xs text-muted-foreground">1d ago</span>
-              </div>
-              <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/30">
-                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Team member added</p>
-                  <p className="text-xs text-muted-foreground">New developer joined the team</p>
-                </div>
-                <span className="text-xs text-muted-foreground">3d ago</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              Quick Stats
-            </CardTitle>
-            <CardDescription>Performance overview</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Projects Completed</span>
-                <Badge variant="secondary">12</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Client Satisfaction</span>
-                <Badge variant="secondary">98%</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Active Projects</span>
-                <Badge variant="secondary">{stats.projects}</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Team Growth</span>
-                <Badge variant="secondary">+20%</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
@@ -464,6 +468,13 @@ function ProjectsManager({
     }
   }
 
+  // Filter projects based on search term
+  const filteredProjects = projects.filter(project =>
+    project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    project.tech.some(tech => tech.toLowerCase().includes(searchTerm.toLowerCase()))
+  )
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -500,49 +511,76 @@ function ProjectsManager({
           <Filter className="w-4 h-4 mr-2" />
           Filter
         </Button>
+        {searchTerm && (
+          <div className="text-sm text-muted-foreground">
+            {filteredProjects.length} of {projects.length} projects
+          </div>
+        )}
       </div>
 
       {/* Projects Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <Card key={project._id} className="group hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-lg">{project.title}</CardTitle>
-                <Button variant="ghost" size="sm">
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </div>
-              <CardDescription className="line-clamp-2">
-                {project.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex flex-wrap gap-1">
-                  {project.tech.map((tech: string) => (
-                    <span
-                      key={tech}
-                      className="inline-flex items-center px-2 py-1 text-xs bg-primary/10 text-primary rounded-md"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+        {filteredProjects.length > 0 ? (
+          filteredProjects.map((project) => (
+            <Card key={project._id} className="group hover:shadow-md transition-shadow overflow-hidden">
+              {/* Project Image */}
+              {project.image && (
+                <div className="relative w-full h-48 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-200"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" onClick={() => handleEditProject(project)}>
-                    <Edit className="w-3 h-3 mr-1" />
-                    Edit
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleDeleteProject(project._id!)}>
-                    <Trash2 className="w-3 h-3 mr-1" />
-                    Delete
+              )}
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-lg">{project.title}</CardTitle>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="w-4 h-4" />
                   </Button>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                <CardDescription className="line-clamp-2">
+                  {project.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-1">
+                    {project.tech.map((tech: string) => (
+                      <span
+                        key={tech}
+                        className="inline-flex items-center px-2 py-1 text-xs bg-primary/10 text-primary rounded-md"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" onClick={() => handleEditProject(project)}>
+                      <Edit className="w-3 h-3 mr-1" />
+                      Edit
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleDeleteProject(project._id!)}>
+                      <Trash2 className="w-3 h-3 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">
+            <Search className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground mb-2">No projects found</h3>
+            <p className="text-sm text-muted-foreground">
+              {searchTerm ? `No projects match "${searchTerm}"` : 'No projects available'}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Form Dialog */}
@@ -758,18 +796,28 @@ function TeamManager({
             <CardContent className="pt-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Users className="w-6 h-6 text-primary" />
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center border-2 border-primary/20">
+                    {member.avatar ? (
+                      <Image
+                        src={member.avatar}
+                        alt={member.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Users className="w-8 h-8 text-primary" />
+                    )}
                   </div>
-                  <div>
-                    <h3 className="font-medium">{member.name}</h3>
+                  <div className="flex-1">
+                    <h3 className="font-medium text-base">{member.name}</h3>
                     <p className="text-sm text-muted-foreground">{member.role}</p>
+                    <p className="text-xs text-muted-foreground">{member.location}</p>
                   </div>
                 </div>
                 <div className="space-y-2 text-sm">
                   <p><span className="text-muted-foreground">Email:</span> {member.email}</p>
-                  <p><span className="text-muted-foreground">Location:</span> {member.location}</p>
                   <p><span className="text-muted-foreground">Joined:</span> {member.joinedYear}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{member.bio}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button size="sm" variant="outline" onClick={() => handleEditMember(member)}>
