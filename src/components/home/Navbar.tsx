@@ -81,7 +81,7 @@ export default function NavbarDemo() {
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full"
+                className="w-full !bg-primary"
               >
                 Book a call
               </NavbarButton>

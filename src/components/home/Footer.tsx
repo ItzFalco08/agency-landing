@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 import { Github, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import Image from "next/image";
 
 function Footer() {
   return (
@@ -10,9 +11,7 @@ function Footer() {
           {/* Brand Section */}
           <div className="md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">A</span>
-              </div>
+              <Image src="/images/logo.png" width={36} height={36} alt="logo" />
               <span className="font-semibold text-lg">Annovas</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
