@@ -36,6 +36,12 @@ interface Testimonial {
   role: string;
   company: string;
   rating?: number;
+  avatar?: string;          // Legacy field
+  profilePhoto?: string;    // New field
+  companyLogo?: string;     // New field
+  featured?: boolean;
+  status?: string;
+  createdAt?: string;
 }
 
 interface TeamMember {
@@ -161,17 +167,25 @@ class ApiClient {
     };
   }
 
-  async createTestimonial(testimonialData: Omit<Testimonial, '_id'>): Promise<ApiResponse<Testimonial>> {
+  async createTestimonial(testimonialData: Omit<Testimonial, '_id'> | FormData): Promise<ApiResponse<Testimonial>> {
+    const body = testimonialData instanceof FormData 
+      ? testimonialData 
+      : JSON.stringify(testimonialData);
+      
     return this.request<Testimonial>('/testimonials', {
       method: 'POST',
-      body: JSON.stringify(testimonialData),
+      body,
     });
   }
 
-  async updateTestimonial(id: string, testimonialData: Partial<Testimonial>): Promise<ApiResponse<Testimonial>> {
+  async updateTestimonial(id: string, testimonialData: Partial<Testimonial> | FormData): Promise<ApiResponse<Testimonial>> {
+    const body = testimonialData instanceof FormData 
+      ? testimonialData 
+      : JSON.stringify(testimonialData);
+      
     return this.request<Testimonial>(`/testimonials/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(testimonialData),
+      body,
     });
   }
 
@@ -267,6 +281,52 @@ class ApiClient {
         avatar: {
           url: uploadData.avatar.url,
           publicId: uploadData.avatar.publicId
+        }
+      }
+    };
+  }
+
+  async uploadTestimonialProfilePhoto(file: File): Promise<ApiResponse<{ profilePhoto: { url: string; publicId: string } }>> {
+    const formData = new FormData();
+    formData.append('profilePhoto', file);
+
+    const response = await this.request<{ message: string; profilePhoto: { url: string; publicId: string; originalName: string; size: number } }>('/upload/testimonial-profile', {
+      method: 'POST',
+      body: formData,
+    });
+
+    // The backend returns the profilePhoto data directly, not wrapped in ApiResponse format
+    const uploadData = response as unknown as { message: string; profilePhoto: { url: string; publicId: string; originalName: string; size: number } };
+    
+    return {
+      success: true,
+      data: {
+        profilePhoto: {
+          url: uploadData.profilePhoto.url,
+          publicId: uploadData.profilePhoto.publicId
+        }
+      }
+    };
+  }
+
+  async uploadCompanyLogo(file: File): Promise<ApiResponse<{ companyLogo: { url: string; publicId: string } }>> {
+    const formData = new FormData();
+    formData.append('companyLogo', file);
+
+    const response = await this.request<{ message: string; companyLogo: { url: string; publicId: string; originalName: string; size: number } }>('/upload/company-logo', {
+      method: 'POST',
+      body: formData,
+    });
+
+    // The backend returns the companyLogo data directly, not wrapped in ApiResponse format
+    const uploadData = response as unknown as { message: string; companyLogo: { url: string; publicId: string; originalName: string; size: number } };
+    
+    return {
+      success: true,
+      data: {
+        companyLogo: {
+          url: uploadData.companyLogo.url,
+          publicId: uploadData.companyLogo.publicId
         }
       }
     };

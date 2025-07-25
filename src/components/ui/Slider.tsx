@@ -2,7 +2,8 @@
 import { type EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, User, Building2 } from "lucide-react";
+import Image from "next/image";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 
@@ -140,7 +141,22 @@ export function VainillaCard({ quote, author }: QuoteData) {
         </div>
         <div className="flex items-center gap-4 pl-5">
           <div className="flex flex-1 items-center gap-5 border-r border-border py-4">
-            <div className="hidden size-16 rounded-full bg-neutral-200 dark:bg-neutral-800 lg:block" />
+            {/* Profile Image */}
+            <div className="hidden size-16 rounded-full bg-neutral-200 dark:bg-neutral-800 lg:block overflow-hidden">
+              {author.image.url ? (
+                <Image
+                  src={author.image.url}
+                  alt={author.image.alt || `${author._title} profile`}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <User className="w-8 h-8 text-neutral-500" />
+                </div>
+              )}
+            </div>
             <div className="flex flex-1 flex-col">
               <h5 className="text-base font-medium lg:text-lg">{author._title}</h5>
               <p className="text-pretty text-sm text-neutral-600 dark:text-neutral-400 lg:text-base">
@@ -148,8 +164,21 @@ export function VainillaCard({ quote, author }: QuoteData) {
               </p>
             </div>
           </div>
+          {/* Company Logo */}
           <div className="pr-5">
-            <div className="w-12 h-12 bg-neutral-200 dark:bg-neutral-800 rounded lg:w-16 lg:h-16" />
+            <div className="w-12 h-12 bg-neutral-200 dark:bg-neutral-800 rounded lg:w-16 lg:h-16 overflow-hidden flex items-center justify-center">
+              {author.company.image.url ? (
+                <Image
+                  src={author.company.image.url}
+                  alt={author.company.image.alt || `${author.company._title} logo`}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <Building2 className="w-6 h-6 text-neutral-500 lg:w-8 lg:h-8" />
+              )}
+            </div>
           </div>
         </div>
       </article>

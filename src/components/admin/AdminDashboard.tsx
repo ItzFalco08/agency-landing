@@ -53,6 +53,7 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 import { useProjects, useTestimonials, useTeamMembers } from '@/hooks/useApiData'
+import { apiClient } from '@/lib/api'
 import { useAuth } from '@/hooks/useAuth'
 import { Project, Testimonial, TeamMember } from '@/lib/api'
 
@@ -89,6 +90,39 @@ export function AdminDashboard() {
     projects: projects.length,
     testimonials: testimonials.length,
     teamMembers: teamMembers.length
+  }
+
+  // Wrapper functions to handle FormData for testimonials
+  const handleCreateTestimonial = async (testimonialData: Omit<Testimonial, '_id'> | FormData) => {
+    if (testimonialData instanceof FormData) {
+      // Let the API client handle FormData directly
+      try {
+        await apiClient.createTestimonial(testimonialData)
+        // Refresh testimonials
+        window.location.reload() // Simple refresh for now
+      } catch (error) {
+        console.error('Error creating testimonial:', error)
+        throw error
+      }
+    } else {
+      await createTestimonial(testimonialData)
+    }
+  }
+
+  const handleUpdateTestimonial = async (id: string, testimonialData: Partial<Testimonial> | FormData) => {
+    if (testimonialData instanceof FormData) {
+      // Let the API client handle FormData directly
+      try {
+        await apiClient.updateTestimonial(id, testimonialData)
+        // Refresh testimonials
+        window.location.reload() // Simple refresh for now
+      } catch (error) {
+        console.error('Error updating testimonial:', error)
+        throw error
+      }
+    } else {
+      await updateTestimonial(id, testimonialData)
+    }
   }
 
   // Sidebar navigation items
@@ -264,8 +298,8 @@ export function AdminDashboard() {
                 <TestimonialsManager 
                   testimonials={testimonials}
                   loading={testimonialsLoading}
-                  onCreateTestimonial={createTestimonial}
-                  onUpdateTestimonial={updateTestimonial}
+                  onCreateTestimonial={handleCreateTestimonial}
+                  onUpdateTestimonial={handleUpdateTestimonial}
                   onDeleteTestimonial={deleteTestimonial}
                 />
               )}
@@ -608,8 +642,8 @@ function TestimonialsManager({
 }: { 
   testimonials: Testimonial[]
   loading: boolean
-  onCreateTestimonial: (testimonialData: Omit<Testimonial, '_id'>) => Promise<void>
-  onUpdateTestimonial: (id: string, testimonialData: Partial<Testimonial>) => Promise<void>
+  onCreateTestimonial: (testimonialData: Omit<Testimonial, '_id'> | FormData) => Promise<void>
+  onUpdateTestimonial: (id: string, testimonialData: Partial<Testimonial> | FormData) => Promise<void>
   onDeleteTestimonial: (id: string) => Promise<void>
 }) {
   const [showForm, setShowForm] = useState(false)
@@ -625,7 +659,7 @@ function TestimonialsManager({
     setShowForm(true)
   }
 
-  const handleSaveTestimonial = async (testimonialData: Omit<Testimonial, '_id'>) => {
+  const handleSaveTestimonial = async (testimonialData: Omit<Testimonial, '_id'> | FormData) => {
     try {
       if (editingTestimonial?._id) {
         await onUpdateTestimonial(editingTestimonial._id, testimonialData)
@@ -673,30 +707,63 @@ function TestimonialsManager({
           <Card key={testimonial._id}>
             <CardContent className="pt-6">
               <div className="space-y-4">
-                <div className="flex items-start justify-between">
-                  <blockquote className="text-lg italic">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </blockquote>
-                  <Button variant="ghost" size="sm">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.role} at {testimonial.company}
-                    </p>
+                <div className="flex items-start gap-4">
+                  {/* Profile Photo */}
+                  <div className="flex-shrink-0">
+                    {testimonial.profilePhoto || testimonial.avatar ? (
+                      <Image
+                        src={testimonial.profilePhoto || testimonial.avatar || ''}
+                        alt={`${testimonial.author} profile`}
+                        width={48}
+                        height={48}
+                        className="rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                        <User className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" onClick={() => handleEditTestimonial(testimonial)}>
-                      <Edit className="w-3 h-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleDeleteTestimonial(testimonial._id!)}>
-                      <Trash2 className="w-3 h-3 mr-1" />
-                      Delete
-                    </Button>
+                  
+                  <div className="flex-1">
+                    <blockquote className="text-lg italic mb-3">
+                      &ldquo;{testimonial.quote}&rdquo;
+                    </blockquote>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <p className="font-medium">{testimonial.author}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {testimonial.role} at {testimonial.company}
+                          </p>
+                        </div>
+                        
+                        {/* Company Logo */}
+                        {testimonial.companyLogo && (
+                          <div className="ml-3">
+                            <Image
+                              src={testimonial.companyLogo}
+                              alt={`${testimonial.company} logo`}
+                              width={32}
+                              height={32}
+                              className="rounded object-contain"
+                            />
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <Button size="sm" variant="outline" onClick={() => handleEditTestimonial(testimonial)}>
+                          <Edit className="w-3 h-3 mr-1" />
+                          Edit
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleDeleteTestimonial(testimonial._id!)}>
+                          <Trash2 className="w-3 h-3 mr-1" />
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

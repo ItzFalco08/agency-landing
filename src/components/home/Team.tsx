@@ -2,10 +2,14 @@
 import { type EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import * as React from "react";
-import { ChevronLeft, ChevronRight, Mail, User, MapPin, Calendar } from "lucide-react";
+import { ChevronLeft, ChevronRight, Mail, User, MapPin, Calendar, Loader2 } from "lucide-react";
+import Image from "next/image";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { usePublicData } from "@/hooks/usePublicData";
+
+
 
 interface TeamMember {
   _id: string
@@ -13,53 +17,10 @@ interface TeamMember {
   role: string
   email?: string
   bio: string
+  avatar?: string
   joinedYear?: string
   location?: string
 }
-
-const teamMembers: TeamMember[] = [
-  {
-    _id: "1",
-    name: "Anubhav Singh",
-    role: "Founder & CEO",
-    email: "anubhav@weanovas.co.in",
-    bio: "Visionary leader with a passion for innovation and building exceptional digital experiences that drive business growth.",
-    joinedYear: "2022",
-    location: "India"
-  },
-  {
-    _id: "2",
-    name: "Hetvi Patel",
-    role: "Social Media Manager",
-    bio: "Creative strategist who crafts compelling brand stories and builds meaningful connections across all social platforms.",
-    joinedYear: "2023",
-    location: "India"
-  },
-  {
-    _id: "3",
-    name: "Dhiraj",
-    role: "Full Stack Web Developer",
-    bio: "Expert developer who brings ideas to life with clean, efficient code and modern web technologies.",
-    joinedYear: "2023",
-    location: "India"
-  },
-  {
-    _id: "4",
-    name: "Raghav",
-    role: "UI/UX & Brand Designer",
-    bio: "Design enthusiast who creates beautiful, user-centered experiences and memorable brand identities.",
-    joinedYear: "2023",
-    location: "India"
-  },
-  {
-    _id: "5",
-    name: "Rupam Das",
-    role: "Fullstack Developer & UI Designer",
-    bio: "Multi-talented developer and designer who bridges the gap between functionality and beautiful design.",
-    joinedYear: "2023",
-    location: "India"
-  }
-]
 
 function TeamSlider({ members }: { members: TeamMember[] }) {
 
@@ -164,16 +125,26 @@ function TeamSlider({ members }: { members: TeamMember[] }) {
   );
 }
 
-export function VanillaTeamCard({ _id, name, role, email, joinedYear, location }: TeamMember) {
+export function VanillaTeamCard({ _id, name, role, email, avatar, joinedYear, location }: TeamMember) {
   return (
     <div className="min-w-0 max-w-full shrink-0 grow-0 basis-[min(400px,100%)] self-stretch lg:pr-6">
       <article className="embla__slide flex h-full w-full min-w-0 transform touch-pan-y touch-pinch-zoom select-none flex-col rounded-xl border border-border [backface-visibility:hidden]   transition-colors">
         <div className="flex flex-1 flex-col p-6 relative">
           {/* Profile Section */}
           <div className="flex flex-col items-center text-center mb-6">
-            {/* Profile Icon */}
-            <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center border-2 border-primary/20 mb-4">
-              <User className="w-8 h-8 text-primary/70" />
+            {/* Profile Icon/Avatar */}
+            <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center border-2 border-primary/20 mb-4 overflow-hidden">
+              {avatar ? (
+                <Image
+                  src={avatar}
+                  alt={`${name} avatar`}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <User className="w-8 h-8 text-primary/70" />
+              )}
             </div>
 
             {/* Name */}
@@ -239,6 +210,38 @@ export const TeamCard = React.memo(
 );
 
 function Team() {
+  const { teamMembers, loading, error } = usePublicData()
+
+  if (loading) {
+    return (
+      <section className="border-l-[1px] border-r-[1px] border-border py-12">
+        <div id='title' className='w-full flex justify-center mb-12'>
+          <h2 className="font-semibold text-center relative z-20 py-6 bg-clip-text text-transparent bg-black dark:bg-gradient-to-b dark:from-neutral-800 dark:via-white dark:to-white">
+            Meet Our Team
+          </h2>
+        </div>
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="border-l-[1px] border-r-[1px] border-border py-12">
+        <div id='title' className='w-full flex justify-center mb-12'>
+          <h2 className="font-semibold text-center relative z-20 py-6 bg-clip-text text-transparent bg-black dark:bg-gradient-to-b dark:from-neutral-800 dark:via-white dark:to-white">
+            Meet Our Team
+          </h2>
+        </div>
+        <div className="text-center text-muted-foreground">
+          Failed to load team members. Please try again later.
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section className="border-l-[1px] border-r-[1px] border-border py-12">
       <div id='title' className='w-full flex justify-center mb-12'>
@@ -247,7 +250,13 @@ function Team() {
         </h2>
       </div>
 
-      <TeamSlider members={teamMembers} />
+      {teamMembers.length > 0 ? (
+        <TeamSlider members={teamMembers} />
+      ) : (
+        <div className="text-center text-muted-foreground py-12">
+          No team members available at the moment.
+        </div>
+      )}
 
       {/* Join Team CTA */}
       <div className="text-center mt-16 max-w-4xl mx-auto px-4 lg:px-0">

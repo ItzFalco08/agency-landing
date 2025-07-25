@@ -243,7 +243,7 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
 
 interface TestimonialFormProps {
   testimonial?: Testimonial
-  onSave: (testimonial: Omit<Testimonial, '_id'>) => void
+  onSave: (testimonial: Omit<Testimonial, '_id'> | FormData) => void
   onCancel: () => void
 }
 
@@ -252,12 +252,73 @@ export function TestimonialForm({ testimonial, onSave, onCancel }: TestimonialFo
     quote: testimonial?.quote || '',
     author: testimonial?.author || '',
     role: testimonial?.role || '',
-    company: testimonial?.company || ''
+    company: testimonial?.company || '',
+    profilePhoto: testimonial?.profilePhoto || '',
+    companyLogo: testimonial?.companyLogo || ''
   })
+  
+  const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null)
+  const [companyLogoFile, setCompanyLogoFile] = useState<File | null>(null)
+  const [uploadingFiles, setUploadingFiles] = useState(false)
+  const profilePhotoInputRef = useRef<HTMLInputElement>(null)
+  const companyLogoInputRef = useRef<HTMLInputElement>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onSave(formData)
+    setUploadingFiles(true)
+    
+    try {
+      // If we have files to upload, use FormData
+      if (profilePhotoFile || companyLogoFile) {
+        const formDataToSubmit = new FormData()
+        
+        // Add text fields
+        formDataToSubmit.append('quote', formData.quote)
+        formDataToSubmit.append('author', formData.author)
+        formDataToSubmit.append('role', formData.role)
+        formDataToSubmit.append('company', formData.company)
+        
+        // Add files if selected
+        if (profilePhotoFile) {
+          formDataToSubmit.append('profilePhoto', profilePhotoFile)
+        }
+        
+        if (companyLogoFile) {
+          formDataToSubmit.append('companyLogo', companyLogoFile)
+        }
+        
+        console.log('Submitting testimonial with FormData:', {
+          hasProfilePhoto: !!profilePhotoFile,
+          hasCompanyLogo: !!companyLogoFile,
+          textData: {
+            quote: formData.quote,
+            author: formData.author,
+            role: formData.role,
+            company: formData.company
+          }
+        })
+        
+        // Pass FormData directly to onSave
+        await onSave(formDataToSubmit)
+      } else {
+        // No files, just send regular data
+        const testimonialData = {
+          quote: formData.quote,
+          author: formData.author,
+          role: formData.role,
+          company: formData.company,
+          profilePhoto: formData.profilePhoto,
+          companyLogo: formData.companyLogo
+        }
+        
+        await onSave(testimonialData)
+      }
+    } catch (error) {
+      console.error('Error saving testimonial:', error)
+      alert('Failed to save testimonial. Please try again.')
+    } finally {
+      setUploadingFiles(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -265,6 +326,42 @@ export function TestimonialForm({ testimonial, onSave, onCancel }: TestimonialFo
       ...prev,
       [e.target.name]: e.target.value
     }))
+  }
+
+  const handleProfilePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setProfilePhotoFile(file)
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file)
+      setFormData(prev => ({ ...prev, profilePhoto: previewUrl }))
+    }
+  }
+
+  const handleCompanyLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setCompanyLogoFile(file)
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file)
+      setFormData(prev => ({ ...prev, companyLogo: previewUrl }))
+    }
+  }
+
+  const removeProfilePhoto = () => {
+    setProfilePhotoFile(null)
+    setFormData(prev => ({ ...prev, profilePhoto: '' }))
+    if (profilePhotoInputRef.current) {
+      profilePhotoInputRef.current.value = ''
+    }
+  }
+
+  const removeCompanyLogo = () => {
+    setCompanyLogoFile(null)
+    setFormData(prev => ({ ...prev, companyLogo: '' }))
+    if (companyLogoInputRef.current) {
+      companyLogoInputRef.current.value = ''
+    }
   }
 
   return (
@@ -327,14 +424,111 @@ export function TestimonialForm({ testimonial, onSave, onCancel }: TestimonialFo
                 required
               />
             </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="profilePhoto">Profile Photo</Label>
+              <div className="space-y-3">
+                {formData.profilePhoto && (
+                  <div className="relative w-32 h-32 mx-auto border rounded-full overflow-hidden">
+                    <Image
+                      src={formData.profilePhoto}
+                      alt="Profile photo preview"
+                      fill
+                      className="object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-1 right-1"
+                      onClick={removeProfilePhoto}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+                
+                <div className="flex gap-2">
+                  <Input
+                    ref={profilePhotoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePhotoChange}
+                    className="hidden"
+                    id="profilePhoto-upload"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => profilePhotoInputRef.current?.click()}
+                    className="flex-1"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Profile Photo
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="companyLogo">Company Logo</Label>
+              <div className="space-y-3">
+                {formData.companyLogo && (
+                  <div className="relative w-32 h-20 mx-auto border rounded overflow-hidden">
+                    <Image
+                      src={formData.companyLogo}
+                      alt="Company logo preview"
+                      fill
+                      className="object-contain"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-1 right-1"
+                      onClick={removeCompanyLogo}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+                
+                <div className="flex gap-2">
+                  <Input
+                    ref={companyLogoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCompanyLogoChange}
+                    className="hidden"
+                    id="companyLogo-upload"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => companyLogoInputRef.current?.click()}
+                    className="flex-1"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Company Logo
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
           
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onCancel}>
               Cancel
             </Button>
-            <Button type="submit">
-              {testimonial ? 'Update Testimonial' : 'Add Testimonial'}
+            <Button type="submit" disabled={uploadingFiles}>
+              {uploadingFiles ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                testimonial ? 'Update Testimonial' : 'Add Testimonial'
+              )}
             </Button>
           </DialogFooter>
         </form>

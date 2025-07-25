@@ -47,15 +47,9 @@ export function Testimonials() {
       role: testimonial.role || "Client",
       company: {
         _title: testimonial.company || "Company",
-        image: { 
-          url: testimonial.companyLogo || "", 
-          alt: `${testimonial.company || "Company"} logo` 
-        }
+        image: { url: "", alt: "" }
       },
-      image: { 
-        url: testimonial.profilePhoto || testimonial.avatar || "", 
-        alt: `${testimonial.author} profile photo` 
-      }
+      image: { url: "", alt: "" }
     }
   }))
 
