@@ -2,16 +2,18 @@
 import Lenis from 'lenis';
 import { useEffect } from 'react'
 
+let lenis: Lenis | undefined;
+
 function SmoothScroll() {
     useEffect(()=> {
         // add smooth scroll
-        const lenis = new Lenis({
+        lenis = new Lenis({
             lerp: 0.15,            // Higher = more friction
         });
         let animationFrameId: number;
 
         function raf(currentTime: number) {
-            lenis.raf(currentTime);
+            lenis?.raf(currentTime);
             // assign the next animation frame
             animationFrameId = requestAnimationFrame(raf);
         }
@@ -19,7 +21,7 @@ function SmoothScroll() {
 
         return ()=> {
             // destroy lenis instance
-            lenis.destroy();
+            lenis?.destroy();
             // destroy raf animation frame
             cancelAnimationFrame(animationFrameId);
         }
@@ -28,4 +30,4 @@ function SmoothScroll() {
     return null;
 }
 
-export { SmoothScroll };
+export { SmoothScroll, lenis };

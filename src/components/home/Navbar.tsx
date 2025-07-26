@@ -20,11 +20,11 @@ export default function NavbarDemo() {
       link: "#features",
     },
     {
-      name: "Pricing",
+      name: "Projects",
       link: "#pricing",
     },
     {
-      name: "Contact",
+      name: "Testimonials",
       link: "#contact",
     },
   ];
@@ -40,13 +40,7 @@ export default function NavbarDemo() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <ToggleTheme />
-            <a 
-              href="/admin/login" 
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Admin
-            </a>
-            <NavbarButton variant="primary">Book a call</NavbarButton>
+            <NavbarButton href="https://wa.me/917992193730" target="_blank" rel="noopener noreferrer" variant="primary">Book a call</NavbarButton>
           </div>
         </NavBody>
 
@@ -78,13 +72,15 @@ export default function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full !bg-primary"
-              >
-                Book a call
-              </NavbarButton>
+              <a href="https://wa.me/917992193730" target='_blank' rel='noopener noreferrer' className="inline-block">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full !bg-primary"
+                >
+                  Book a call
+                </NavbarButton>
+              </a>
             </div>
           </MobileNavMenu>
         </MobileNav>

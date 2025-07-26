@@ -13,7 +13,7 @@ function Projects() {
 
   if (loading) {
     return (
-      <section className="py-24 border-l-[1px] border-r-[1px] px-4 sm:px-0 border-border">
+      <section id='OurWork' className="py-24 border-l-[1px] border-r-[1px] px-4 sm:px-0 border-border">
         <div className='max-w-5xl mx-auto'>
           <div id='title' className='w-full py-8 flex flex-col items-center justify-center mb-6'>
             <h2 className="font-semibold text-center relative z-20 py-4 bg-clip-text text-transparent bg-black dark:bg-gradient-to-b dark:from-neutral-800 dark:via-white dark:to-white">
@@ -46,7 +46,7 @@ function Projects() {
   }
 
   return (
-    <section className="py-24 border-l-[1px] border-r-[1px] px-4 sm:px-0 border-border">
+    <section id='OurWork' className="py-24 border-l-[1px] border-r-[1px] px-4 sm:px-0 border-border">
       <div className='max-w-5xl mx-auto'>
         {/* Header */}
         <div id='title' className='w-full py-8 flex flex-col items-center justify-center mb-6'>
