@@ -1,11 +1,14 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Smartphone } from "lucide-react";
 import { useRef } from "react";
-import { IconWorldWww, IconDeviceMobile, IconBrandGoogleAnalytics, IconDeviceDesktopCode } from "@tabler/icons-react";
+import { Globe, Marketing, Code, Software } from "@/icons/Icons";
+import { useTheme } from "next-themes";
+
+
 function BentoItem({children, className}: {children?: React.ReactNode, className?: string}) {
   const ref = useRef(null);
+  
   
   const {scrollYProgress} = useScroll({
     target: ref,
@@ -24,14 +27,18 @@ function BentoItem({children, className}: {children?: React.ReactNode, className
 }
 
 function Bento() {
+  
+    const { theme } = useTheme();
+    const colors:string = theme === "dark"  ? "primary:#FBACF4,secondary:#FBACF4" : "primary:#a4529f,secondary:#a4529f";
+  
   return (
     <div className='w-full max-w-4xl mx-auto flex flex-col md:flex-row gap-4 mt-6  px-4 md:px-0'>
       <div className='relative w-full h-fit flex flex-col gap-4'>
         <BentoItem>
-          <div className="bg-[#8d42df70] w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
-           <IconWorldWww size={28}/>
+          <div className="bg-primary/20 w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
+            <Globe colors={colors}/>
           </div>
-          <div className="h-full flex flex-col justify-between">
+          <div className="h-full flex flex-col ">
             <h5>Website Development</h5>
             <p className="text-neutral-600 dark:text-neutral-400 font-normal text-[16px] leading-relaxed">
               Fast, modern websites to convert leads.
@@ -40,10 +47,10 @@ function Bento() {
         </BentoItem>
 
         <BentoItem>
-          <div className="bg-[#8d42df70] w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
-            <IconDeviceMobile size={28}/>
+          <div className="bg-primary/20 w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
+            <Code colors={colors}/>
           </div>
-          <div className="h-full flex flex-col justify-between">
+          <div className="h-full flex flex-col ">
             <h5>Mobile Apps</h5>
             <p className="text-neutral-600 dark:text-neutral-400 font-normal text-[16px] leading-relaxed">
               Launch your startup with a user-friendly app.
@@ -70,8 +77,8 @@ function Bento() {
         </BentoItem>
 
         <BentoItem>
-          <div className="bg-[#8d42df70] w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
-            <IconBrandGoogleAnalytics size={28}/>
+          <div className="bg-primary/20 w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
+            <Marketing colors={colors} />
           </div>
 
           <div className="h-full flex flex-col justify-between">
@@ -83,8 +90,8 @@ function Bento() {
         </BentoItem>
 
         <BentoItem>
-          <div className="bg-[#8d42df70] w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
-            <IconDeviceDesktopCode size={28}/>
+          <div className="bg-primary/20 w-[60px] h-[70px] shrink-0 rounded-2xl flex items-center justify-center">
+            <Software colors={colors} />
           </div>
 
           <div className="h-full flex flex-col justify-between">

@@ -1,77 +1,26 @@
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
-import { Github, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import { Github, Twitter, Linkedin, Mail, Phone, MapPin, Instagram } from "lucide-react"
 import Image from "next/image";
 
 function Footer() {
   return (
     <div className="w-full px-4 py-8 border-l-[1px] border-r-[1px] border-border z-[102]">
       <footer className="max-w-6xl mx-auto bg-neutral-50 dark:bg-neutral-950 rounded-2xl border border-border shadow-lg p-8 md:p-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="flex justify-between mb-12">
+
           {/* Brand Section */}
-          <div className="md:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
+          <div className="max-w-sm">
+            <div className="flex items-center  mb-4">
               <Image src="/images/logo.png" width={36} height={36} alt="logo" />
-              <span className="font-semibold text-lg">Annovas</span>
+              <span className="font-medium text-lg">Annovas</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Crafting digital experiences that drive results and inspire growth for forward-thinking brands.
             </p>
           </div>
 
-          {/* Services */}
-          <div>
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wide">Services</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  Brand Strategy
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  Web Design
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  Development
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  Digital Marketing
-                </Link>
-              </li>
-            </ul>
-          </div>
 
-          {/* Company */}
-          <div>
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wide">Company</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  Our Work
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
 
           {/* Contact */}
           <div>
@@ -79,20 +28,27 @@ function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Mail className="w-4 h-4 shrink-0" />
-                <span>hello@agency.com</span>
-              </li>
-              <li className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Phone className="w-4 h-4" />
-                <span>+1 (555) 123-4567</span>
+                <a href="mailto:anubhav@weanovas.in" className="hover:underline underline-offset-4 transition-all">anubhav@weanovas.in</a>
               </li>
               <li className="flex items-start space-x-2 text-sm text-muted-foreground">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>
-                  123 Design Street
-                  <br />
-                  Creative City, CC 12345
+                <Phone className="w-4 h-4" />
+
+                <span className="flex flex-col">
+                  <a
+                    href="tel:+917992193730"
+                    className="hover:underline underline-offset-4 transition-all"
+                  >
+                    +91 79921 93730
+                  </a>
+                  <a
+                    href="tel:+919425478791"
+                    className="hover:underline underline-offset-4 transition-all"
+                  >
+                    +91 94254 78791
+                  </a>
                 </span>
               </li>
+
             </ul>
           </div>
         </div>
@@ -104,42 +60,34 @@ function Footer() {
           <div className="text-sm text-muted-foreground">© {new Date().getFullYear()} Anovas. All rights reserved.</div>
 
           <div className="flex items-center space-x-6">
+            <a className="text-sm text-muted-foreground" href="https://lordicon.com/">Animated icons by Lordicon.com</a>
+            
+            <Separator orientation="vertical" className="!h-6 " />
+
             {/* Social Links */}
             <div className="flex items-center space-x-4">
-              <Link
-                href="#"
+              <a
+                href="https://www.instagram.com/anovas.co.in/"
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Twitter"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Twitter className="w-4 h-4" />
-              </Link>
-              <Link
-                href="#"
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/anovas.co.in/"
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Linkedin className="w-4 h-4" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="w-4 h-4" />
-              </Link>
+              </a>
             </div>
 
-            <Separator orientation="vertical" className="!h-4 " />
 
-            {/* Legal Links */}
-            <div className="flex items-center space-x-4 text-sm">
-              <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
-                Privacy
-              </Link>
-              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
-                Terms
-              </Link>
-            </div>
+
           </div>
         </div>
       </footer>

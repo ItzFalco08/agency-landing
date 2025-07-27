@@ -8,6 +8,7 @@ import Projects from "@/components/home/Projects";
 import { Testimonials } from "@/components/home/Testimonials";
 import TechStack from "@/components/home/TechStack";
 import Team from "@/components/home/Team";
+import Cta from "@/components/home/Cta";
 
 export default function Home() {
   return (
@@ -23,7 +24,7 @@ export default function Home() {
         <Team/>
         <Faq/>
       </div>
-
+      <Cta/>
       <div className="relative container z-[101]">
         <Footer/>
       </div>
