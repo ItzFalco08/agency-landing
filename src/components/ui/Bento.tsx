@@ -86,7 +86,7 @@ function Bento() {
             so they can reinvest where it matters the most
           </p>
 
-            <div className="w-full h-full bg-neutral-800 rounded-2xl overflow-hidden md:w-[440px] relative">
+            <div className="w-full h-full bg-neutral-50 dark:bg-neutral-800 rounded-2xl overflow-hidden md:w-[440px] relative">
               <Graph className="w-[540px] absolute bottom-0 transition-all duration-300 ease-in-out left-0 group-hover:left-[-100px]" color="#8AC480" />
               
               {/* Dashed line */}

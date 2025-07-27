@@ -1,7 +1,11 @@
 import React from 'react'
 import {motion} from 'framer-motion'
+import { useTheme } from "next-themes";
 
 function Graph(props: React.ComponentProps<typeof motion.svg>) {
+  const {theme} = useTheme();
+  const stopColor = theme === "dark" ? "#262626" : "#fafafa";
+
   return (
     <motion.svg
       className="w-[500px]"
@@ -15,7 +19,7 @@ function Graph(props: React.ComponentProps<typeof motion.svg>) {
       <defs>
       <linearGradient id="paint0_linear_180_1259" x1="297" y1="1" x2="297" y2="183" gradientUnits="userSpaceOnUse">
         <stop stopColor="#B0DDA9"/>
-        <stop offset="1" stopColor="#262626"/>
+        <stop offset="1" stopColor={stopColor}/>
       </linearGradient>
       </defs>
     </motion.svg>
