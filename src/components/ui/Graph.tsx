@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 
 function Graph(props: React.ComponentProps<typeof motion.svg>) {
   const {theme} = useTheme();
-  const stopColor = theme === "dark" ? "#262626" : "#fafafa";
+  const stopColor = theme === "light" ? "#fafafa" : "#262626";
 
   return (
     <motion.svg

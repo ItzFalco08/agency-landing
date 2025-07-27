@@ -70,7 +70,7 @@ function Bento() {
           </div>
 
           <div className="relative w-full">
-            <InfiniteMovingCards vintegge={true} speed="superfast" className="overflow-clip w-full">
+            <InfiniteMovingCards vintegge={true} speed="fast" className="overflow-clip w-full">
               <Image src="/logos/logo1.webp" width={100} height={10}  className="!h-[40px] !w-fit" alt="company logo" />
               <Image src="/logos/logo2.svg" width={40} height={10}  className="!h-[40px] !w-fit" alt="company logo"/>
               <Image src="/logos/logo3.webp" width={200} height={100}  className="!h-[40px] !w-fit" alt="company logo"/>

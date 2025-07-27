@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { MoveUpRight } from "lucide-react";
 import Navbar from './Navbar';
 import ScrollButton from './ui/ScrollButton';
+import { ContainerTextFlip } from '../ui/container-text-flip';
 
 function Hero() {
 
@@ -24,20 +25,9 @@ function Hero() {
           {/* hero content */}
           <div className='w-full flex-1 border-l-[1px] border-r-[1px] border-border flex items-center justify-center'>
             <div className='space-y-6 flex flex-col items-center gap-4'>
-              <div className='text-center text-[clamp(2rem,6vw,3rem)] max-w-xl font-medium leading-tight tracking-tight'>
-                <TextGenerateEffect 
-                  words="Build Scalable Websites That" 
-                  className="font-poppins"
-                  delay={0}
-                />
-                {" "}
-                <TextGenerateEffect 
-                  words="Converts" 
-                  className="font-playfair italic"
-                  duration={0.5}
-                  delay={1}
-                />
-              </div>
+              <h2 className='text-center  max-w-xl !font-semibold leading-tight tracking-tight'>
+                A Dedicated Team <br/> For <ContainerTextFlip words={["Startup", "Founders", "SaaS Leaders"]} className='font-playfair !test-sm italic text-italic font-medium'/>
+              </h2>
               
               <div className='flex gap-4'>
                 <a href="https://wa.me/917992193730" target='_blank' rel='noopener noreferrer'>
