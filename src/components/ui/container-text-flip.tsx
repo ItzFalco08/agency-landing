@@ -66,7 +66,7 @@ export function ContainerTextFlip({
       letterSpacing: "-0.015em",
     }}
     className={cn(
-      "relative inline-block pt-2 pb-3 text-center text-black dark:text-white",
+      "relative inline-block text-center text-black dark:text-white",
       className,
     )}
     key={words[currentWordIndex]}

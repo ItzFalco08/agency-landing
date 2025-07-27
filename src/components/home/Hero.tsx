@@ -25,8 +25,8 @@ function Hero() {
           {/* hero content */}
           <div className='w-full flex-1 border-l-[1px] border-r-[1px] border-border flex items-center justify-center'>
             <div className='space-y-6 flex flex-col items-center gap-4'>
-              <h2 className='text-center  max-w-xl !font-semibold leading-tight tracking-tight'>
-                A Dedicated Team <br/> For <ContainerTextFlip words={["Startup", "Founders", "SaaS Leaders"]} className='font-playfair !test-sm italic text-italic font-medium'/>
+              <h2 className='text-center max-w-xl !font-semibold leading-tight tracking-tight'>
+                A Dedicated Team <br/> For<ContainerTextFlip words={["Startup", "Founders", "SaaS Leaders"]} className='font-playfair italic text-italic font-medium'/>
               </h2>
               
               <div className='flex gap-4'>
