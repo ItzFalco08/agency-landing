@@ -7,7 +7,7 @@ function Footer() {
   return (
     <div className="w-full px-4 py-8 border-l-[1px] border-r-[1px] border-border z-[102]">
       <footer className="max-w-6xl mx-auto bg-neutral-50 dark:bg-neutral-950 rounded-2xl border border-border shadow-lg p-8 md:p-12">
-        <div className="flex justify-between mb-12">
+        <div className="flex flex-col gap-12 md:gap-none md:flex-row justify-between mb-12">
 
           {/* Brand Section */}
           <div className="max-w-sm">
