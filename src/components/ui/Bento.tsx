@@ -4,6 +4,8 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Globe, Marketing, Code, Software } from "@/icons/Icons";
 import { useTheme } from "next-themes";
+import { InfiniteMovingCards } from "./infinite-moving-cards";
+import Image from "next/image";
 
 
 function BentoItem({children, className}: {children?: React.ReactNode, className?: string}) {
@@ -58,21 +60,29 @@ function Bento() {
           </div>
         </BentoItem>
 
-        <BentoItem className='!h-[296px] flex-col gap-2'>
+        <BentoItem className='!relative md:w-[440px] !h-[296px] flex-col gap-2 justify-between'>
           <div className="flex flex-col gap-2">
             <h5>Companies that trust us</h5>
             <p className="text-neutral-600 dark:text-neutral-400 font-normal text-[16px] leading-relaxed">
               From startups to enterprises, we deliver results.
             </p>
           </div>
+
+          <div className="relative w-full">
+            <InfiniteMovingCards vintegge={true} speed="superfast" className="overflow-clip w-full">
+              <Image src="/logos/logo1.webp" width={100} height={10}  className="!h-[40px] !w-fit" alt="company logo" />
+              <Image src="/logos/logo2.svg" width={40} height={10}  className="!h-[40px] !w-fit" alt="company logo"/>
+              <Image src="/logos/logo3.webp" width={200} height={100}  className="!h-[40px] !w-fit" alt="company logo"/>
+            </InfiniteMovingCards>
+          </div>
         </BentoItem>
       </div>
 
       <div className='relative w-full h-fit flex flex-col gap-4'>
         <BentoItem className='!h-[296px] flex flex-col gap-2'>
-          <h5 className=" font-semibold">50+ Projects Delivered</h5>
+          <h5 className=" font-semibold">$100,000+ Saved for Brands</h5>
           <p className="text-neutral-600 dark:text-neutral-400 font-normal text-[16px] leading-relaxed">
-            High-impact digital solutions across industries.
+            so they can reinvest where it matters the most
           </p>
         </BentoItem>
 

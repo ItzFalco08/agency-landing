@@ -13,7 +13,7 @@ function Footer() {
           <div className="max-w-sm">
             <div className="flex items-center  mb-4">
               <Image src="/images/logo.png" width={36} height={36} alt="logo" />
-              <span className="font-medium text-lg">Annovas</span>
+              <span className="font-medium text-lg">Anovas</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Crafting digital experiences that drive results and inspire growth for forward-thinking brands.

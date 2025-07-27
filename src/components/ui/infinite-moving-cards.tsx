@@ -9,12 +9,14 @@ export const InfiniteMovingCards = ({
   speed = "fast",
   pauseOnHover = true,
   className,
+  vintegge = false
 }: {
   children: React.ReactNode;
   direction?: "left" | "right";
-  speed?: "fast" | "normal" | "slow";
+  speed?: "fast" | "normal" | "slow" | "superfast";
   pauseOnHover?: boolean;
   className?: string;
+  vintegge?: boolean;
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLUListElement>(null);
@@ -56,7 +58,9 @@ export const InfiniteMovingCards = ({
   };
   const getSpeed = () => {
     if (containerRef.current) {
-      if (speed === "fast") {
+      if (speed === "superfast") {
+        containerRef.current.style.setProperty("--animation-duration", "4s");
+      } else if (speed === "fast") {
         containerRef.current.style.setProperty("--animation-duration", "20s");
       } else if (speed === "normal") {
         containerRef.current.style.setProperty("--animation-duration", "40s");
@@ -65,28 +69,39 @@ export const InfiniteMovingCards = ({
       }
     }
   };
-  return (
-    <div
-      ref={containerRef}
+return (
+  <div
+    ref={containerRef}
+    className={cn(
+      "scroller relative z-20 w-full overflow-hidden",
+      className,
+    )}
+  >
+    {
+      vintegge && (
+        <>
+          {/* Left gradient */}
+          <div className="pointer-events-none absolute left-0 top-0 h-full w-24 z-20 bg-gradient-to-r from-neutral-100 dark:from-neutral-900 to-transparent" />
+          {/* Right gradient */}
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-24 z-20 bg-gradient-to-l from-neutral-100 dark:from-neutral-900 to-transparent" />
+        </>
+      )
+    }
+
+    <ul
+      ref={scrollerRef}
       className={cn(
-        "scroller relative z-20 w-full overflow-hidden",
-        className,
+        "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
+        start && "animate-scroll",
+        pauseOnHover && "hover:[animation-play-state:paused]",
       )}
     >
-      <ul
-        ref={scrollerRef}
-        className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
-          start && "animate-scroll",
-          pauseOnHover && "hover:[animation-play-state:paused]",
-        )}
-      >
-        {React.Children.map(children, (child, idx) => (
-          <li key={idx} className="shrink-0">
-            {child}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+      {React.Children.map(children, (child, idx) => (
+        <li key={idx} className="shrink-0">
+          {child}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 };

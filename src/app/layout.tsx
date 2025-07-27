@@ -14,6 +14,7 @@ const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
   subsets: ["latin"],
   weight: ["400", "700"],
+  style: ["normal", "italic"], // Add this line to include italic
   display: "swap",
 });
 
