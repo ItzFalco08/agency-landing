@@ -21,7 +21,6 @@ function Footer() {
           </div>
 
 
-
           {/* Contact */}
           <div>
             <h3 className="font-semibold mb-4 text-sm uppercase tracking-wide">Get in Touch</h3>

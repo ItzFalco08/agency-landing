@@ -6,6 +6,7 @@ import { Globe, Marketing, Code, Software } from "@/icons/Icons";
 import { useTheme } from "next-themes";
 import { InfiniteMovingCards } from "./infinite-moving-cards";
 import Image from "next/image";
+import Graph from "./Graph";
 
 
 function BentoItem({children, className}: {children?: React.ReactNode, className?: string}) {
@@ -79,11 +80,23 @@ function Bento() {
       </div>
 
       <div className='relative w-full h-fit flex flex-col gap-4'>
-        <BentoItem className='!h-[296px] flex flex-col gap-2'>
+        <BentoItem className='!h-[296px] flex flex-col gap-2 group'>
           <h5 className=" font-semibold">$100,000+ Saved for Brands</h5>
           <p className="text-neutral-600 dark:text-neutral-400 font-normal text-[16px] leading-relaxed">
             so they can reinvest where it matters the most
           </p>
+
+            <div className="w-full h-full bg-neutral-800 rounded-2xl overflow-hidden md:w-[440px] relative">
+              <Graph className="w-[540px] absolute bottom-0 transition-all duration-300 ease-in-out left-0 group-hover:left-[-100px]" color="#8AC480" />
+              
+              {/* Dashed line */}
+              <div className="absolute top-[30px] transition-all duration-300 ease-in-out group-hover:top-0 w-full flex justify-end pb-2 pr-4 border-b-[2px] border-dashed border-[#8AC480] h-fit " id="dashed-line" >
+                <span className="text-[#8AC480]  text-[15px] font-normal">
+                  Savings (This Month)
+                </span>
+              </div>
+
+            </div>
         </BentoItem>
 
         <BentoItem>
