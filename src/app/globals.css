@@ -155,6 +155,37 @@
     @apply bg-background text-foreground;
   }
 
+  #customBtn {
+    @apply relative overflow-hidden rounded-full;
+  }
+
+  #customBtn::before {
+    @apply absolute top-[-200%] left-[-25%] w-[150%] h-[500%] z-[1] rounded-full;
+    content: "";
+    background-image: conic-gradient(
+      transparent 0deg,
+      transparent 160deg,
+      #f7f7f790 180deg,
+      transparent 200deg,
+      transparent 360deg
+    );
+    animation: spinGradient 3s linear infinite;
+  }
+
+  #content {
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    top: 4px;
+    left: 4px;
+  }
+
+  /* Animation for rotating the gradient */
+  @keyframes spinGradient {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   /* Typography Base Styles */
   h1 {
     @apply text-2xl sm:text-3xl md:text-5xl font-medium leading-tight tracking-tight;

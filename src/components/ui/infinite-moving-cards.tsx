@@ -9,7 +9,8 @@ export const InfiniteMovingCards = ({
   speed = "fast",
   pauseOnHover = true,
   className,
-  vintegge = false
+  vintegge = false,
+  hideVinteggeOnMobile = false
 }: {
   children: React.ReactNode;
   direction?: "left" | "right";
@@ -17,6 +18,8 @@ export const InfiniteMovingCards = ({
   pauseOnHover?: boolean;
   className?: string;
   vintegge?: boolean;
+  isWorking?: boolean;
+  hideVinteggeOnMobile?: boolean;
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLUListElement>(null);
@@ -77,13 +80,14 @@ return (
       className,
     )}
   >
+
     {
       vintegge && (
         <>
           {/* Left gradient */}
-          <div className="pointer-events-none absolute left-0 top-0 h-full w-24 z-20 bg-gradient-to-r from-neutral-100 dark:from-neutral-900 to-transparent" />
+          <div className={`${hideVinteggeOnMobile && "hidden md:block"} pointer-events-none absolute left-0 top-0 h-full w-24 z-20 bg-gradient-to-r from-neutral-100 dark:from-neutral-900 to-transparent`} />
           {/* Right gradient */}
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-24 z-20 bg-gradient-to-l from-neutral-100 dark:from-neutral-900 to-transparent" />
+          <div className={`${hideVinteggeOnMobile && "hidden md:block"} pointer-events-none absolute right-0 top-0 h-full w-24 z-20 bg-gradient-to-l from-neutral-100 dark:from-neutral-900 to-transparent`} />
         </>
       )
     }

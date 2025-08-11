@@ -24,7 +24,7 @@ export default function Home() {
         <Team/>
         <Faq/>
       </div>
-      {/* <Cta/> */}
+      <Cta/>
       <div className="relative container z-[101]">
         <Footer/>
       </div>
