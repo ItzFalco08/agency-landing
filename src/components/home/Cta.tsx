@@ -15,7 +15,7 @@ function Cta() {
   return (
     <div className="w-full h-fit border-t-[1px] border-b-[1px] border-border flex items-center gap-16 p-4 py-10 sm: md:p-12 flex-col">
       <div className="flex flex-col gap-6">
-        <h3 className="text-xl text-center md:text-3xl">If you scrolled this far,  It's time to LEVEL UP</h3>
+        <h3 className="text-xl text-center md:text-3xl">If you scrolled this far,  Its time to LEVEL UP</h3>
         
         <div className="mx-auto">
           <button id="customBtn" className="relative rounded-full text-white dark:text-black w-[200px] h-[60px] cursor-pointer ">
