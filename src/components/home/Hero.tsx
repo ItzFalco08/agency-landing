@@ -7,6 +7,7 @@ import { MoveUpRight } from "lucide-react";
 import Navbar from './Navbar';
 import ScrollButton from './ui/ScrollButton';
 import { ContainerTextFlip } from '../ui/container-text-flip';
+import Badge from './ui/Badge';
 
 function Hero() {
 
@@ -18,6 +19,17 @@ function Hero() {
         <Spotlight className='hidden md:block light:hidden bg-red-500'/>
       </div> */}
 
+      <Image
+        width={3126}
+          height={1885}
+          src={"/images/background.png"}
+          alt='background'
+          className='absolute inset-0 w-full h-full object-cover dark:invert-0 invert'
+          priority
+      />
+      {/* Bottom fade overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" aria-hidden="true" />
+      
       <Navbar/>
 
         {/* Hero content goes here */}
@@ -25,9 +37,13 @@ function Hero() {
           {/* hero content */}
           <div className='w-full flex-1 border-l-[1px] border-r-[1px] border-border flex items-center justify-center'>
             <div className='space-y-6 flex flex-col items-center gap-4'>
-              <h2 className='text-center max-w-xl !font-semibold leading-tight tracking-tight'>
-                A Dedicated Team <br/> For<ContainerTextFlip words={["Startup", "Founders", "SaaS Leaders"]} className='font-playfair italic text-italic font-medium'/>
-              </h2>
+              <div className='flex flex-col items-center gap-2'>
+                <Badge />
+
+                <h2 className='text-center max-w-xl !font-semibold leading-tight tracking-tight'>
+                  A Dedicated Team <br/> For<ContainerTextFlip words={["Startup", "Founders", "SaaS Leaders"]} className='font-playfair italic text-italic font-medium'/>
+                </h2>
+              </div>
               
               <div className='flex gap-4'>
                 <a href="https://wa.me/917992193730" target='_blank' rel='noopener noreferrer'>
