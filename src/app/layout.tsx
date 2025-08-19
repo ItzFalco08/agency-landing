@@ -19,12 +19,24 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Anovas",
-  description: "Digital agency specializing in web development, mobile apps, and innovative digital solutions",
-  icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+  title: "Anovas | Web & App Development Agency",
+  description: "Modern websites, apps, and digital solutions that convert. Fast, scalable, results-driven.",
+  keywords: ["web development", "Next.js", "digital marketing", "mobile apps", "website development agency", "agency India"],
+  metadataBase: new URL("https://anovas.co.in"),
+  openGraph: {
+    title: "Anovas | Web & App Development Agency",
+    description: "Modern, fast, scalable digital experiences with Next.js, React, Tailwind, TypeScript.",
+    url: "https://anovas.co.in",
+    siteName: "Anovas",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Anovas agency" }],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Anovas Agency",
+    description: "Websites and apps built with modern stack that converts leads.",
+    images: ["/og.png"],
   },
 };
 
